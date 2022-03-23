@@ -1,0 +1,315 @@
+<div class="" style="font-family: 'Jost', sans-serif;">
+    {%extends 'base.html'%}
+    {%block content%}
+    <div class="container">
+        {%if user.is_authenticated and user.is_client%}
+        <h3>Find on Road services</h3>
+        <div class="container-fluid">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li class="{{ message.tags }} text-success">{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <h3 class="pt-5 text-center">Available Approved services</h3>
+            <hr>
+            <div class="row pt-5 ">
+                {%for bus in all_businesses%}
+                <div class="col-md-4 mt-3 mb-3">
+                    <div class="card p-3">
+                        <div class="row">
+                            <div class="col-sm">
+                                <p class="text-secondary">Business name:</p>
+                            </div>
+                            <div class="col-sm">
+                                {{bus.business_name}}
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-sm" class="h1">
+                                <p class="text-secondary">Mechanic name:</p>
+                            </div>
+                            <div class="col-sm">
+                                {{bus.mechanic_name}}
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-sm" class="h1">
+                                <p class="text-secondary">Services:</p>
+                            </div>
+                            <div class="col-sm">
+                                {{bus.services}}
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-sm" class="h1">
+                                <p class="text-secondary">Available:</p>
+                            </div>
+                            <div class="col-sm">
+                                {{bus.available}}
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-sm" class="h1">
+                                <p class="text-secondary">Address:</p>
+                            </div>
+                            <div class="col-sm">
+                                {{bus.address}}
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-sm" class="h1">
+                                <p class="text-secondary">City:</p>
+                            </div>
+                            <div class="col-sm">
+                                {{bus.city}}
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-sm" class="h1">
+                                <p class="text-secondary">Price:</p>
+                            </div>
+                            <div class="col-sm">
+                                {{bus.price}}
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-sm" class="h1">
+                                <p class="text-secondary">Location:</p>
+                            </div>
+                            <div class="col-sm">
+                                {{bus.location}}
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-sm" class="h1">
+                                <p class="text-secondary">Phone number:</p>
+                            </div>
+                            <div class="col-sm">
+                                {{bus.phone_number}}
+                            </div>
+                        </div>
+                        <a href="{%url "client_feedback" bus.id %}">Feedback</a>
+                    </div>
+                </div>
+                {%endfor%}
+            </div>
+
+        </div>
+    </div>
+    {%else%}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <ul class="nav nav-tabs pt-5" id="myTab" role="tablist">
+
+                    <li class="nav-item">
+                        <a class="nav-link active h5" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                            aria-controls="home" aria-selected="true">
+                            My Business
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link h5" id="pending-tab" data-toggle="tab" href="#pending" role="tab"
+                            aria-controls="contact" aria-selected="false">Pending</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link h5" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
+                            aria-controls="contact" aria-selected="false">Approved</a>
+                    </li>
+            </div>
+            <div class="col-md-4 pt-5">
+                <div id="newBus" style="margin: 10 0 auto; float: right">
+                    <a href="{% url "new_business" %}" class="btn-primary btn-lg">Create Business</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                <table class="table table-striped w-full">
+
+                    <!--Table head-->
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="h5 pr-5">Business Name</th>
+                            <th class="h5 pr-5">Mechanic Name</th>
+                            <th class="h5 pr-5">Approved status</th>
+                            <th class="h5 pr-5">Feedback</th>
+                            <th class="h5 pr-5">Action</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        {%for business in businesses%}
+                        <tr class="table-info">
+                            <th scope="row"></th>
+                            <td>{{business.business_name}}</td>
+                            <td>{{business.mechanic_name}}</td>
+                            <td>{{business.is_approved}}</td>
+                            {%if business.is_approved%}
+                            <td>
+                                <a href="{%url "garage_feedback" business.id %}"><i class="fas fa-comment-dots"></i></a>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-sm">
+                                        <a class="disabled"><i class="fas fa-pen-square"></i></a>
+                                    </div>
+                                    <div class="col-sm">
+                                        <a class="disabled"><i class="fas fa-trash-alt text-danger"></i></a>
+                                    </div>
+
+                                    <!-- View more information -->
+
+                                    <div class="col-sm" data-toggle="modal" data-target="{{business.id }}">
+                                        <a class="{%url "view_business" business.id %}"><i class="fas fa-eye"></i></a>
+                                    </div>
+                                    <!-- Modal -->
+                                    <div class="modal fade-right" id="{{business.id}}" tabindex="-1" role="dialog"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-side modal-top-right" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">
+                                                        {{business.business_name}}</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ...
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </td>
+                            {%else%}
+                            <td>
+                                <a href="#" class="disabled"><i class="fas fa-comment-dots"></i></a>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-sm">
+                                        <a href="{%url "update" business.id %}"><i class="fas fa-pen-square"></i></a>
+                                    </div>
+                                    <div class="col-sm">
+                                        <a href="{% url "delete" business.id %}"><i
+                                                class="fas fa-trash-alt text-danger"></i></a>
+                                    </div>
+                                </div>
+
+                            </td>
+                            {%endif%}
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+
+            </div>
+            <!-- pending -->
+            <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+
+                <table class="table table-striped w-full">
+
+                    <!--Table head-->
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="h5 pr-5">Business Name</th>
+                            <th class="h5 pr-5">Mechanic Name</th>
+                            <th class="h5 pr-5">Approved status</th>
+                            <th class="h5 pr-5">Feedback</th>
+                            <th class="h5 pr-5">Action</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        {%for unapproved in not_approved%}
+                        <tr class="table-info">
+                            <th scope="row"></th>
+                            <td>{{unapproved.business_name}}</td>
+                            <td>{{unapproved.mechanic_name}}</td>
+                            <td>{{unapproved.is_approved}}</td>
+                            <td>
+                                <a href="#" class="disabled"><i class="fas fa-comment-dots"></i></a>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-sm">
+                                        <a href="{%url "update" unapproved.id %}"><i class="fas fa-pen-square"></i></a>
+                                    </div>
+                                    <div class="col-sm">
+                                        <a class="{% url "delete" unapproved.id %}"><i
+                                                class="fas fa-trash-alt text-danger"></i></a>
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+
+                <table class="table table-striped w-full">
+
+                    <!--Table head-->
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="h5 pr-5">Business Name</th>
+                            <th class="h5 pr-5">Mechanic Name</th>
+                            <th class="h5 pr-5">Approved status</th>
+                            <th class="h5 pr-5">Feedback</th>
+                            <th class="h5 pr-5">Action</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        {%for approved in approved%}
+                        <tr class="table-info">
+                            <th scope="row"></th>
+                            <td>{{approved.business_name}}</td>
+                            <td>{{approved.mechanic_name}}</td>
+                            <td>{{approved.is_approved}}</td>
+                            <td>
+                                <a class="{%url "garage_feedback" approved.id %}"><i
+                                        class="fas fa-comment-dots"></i></a>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-sm">
+                                        <a class="disabled"><i class="fas fa-pen-square"></i></a>
+                                    </div>
+                                    <div class="col-sm">
+                                        <a class="disabled"><i class="fas fa-trash-alt text-danger"></i></a>
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {%endif%}
+</div>
+{%endblock%}
+</div>
