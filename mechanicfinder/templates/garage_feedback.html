@@ -1,0 +1,30 @@
+
+
+<div class="class" style="font-family: 'Jost', sans-serif;">
+    {% extends 'base.html' %}
+    {% block content %}
+    <div class="container pt-5">
+        <div class="row">
+            {%if feedback%}
+            <div class="col-md-6 mx-auto">
+                <span class="row">
+                    By: <p class="pl-5">{{feedback.user.username}}</p>
+                </span>
+                <span class="row">
+                    Feedback: <p class="pl-5">{{feedback.feedback}}</p>
+                </span>
+                <span class="row">
+                    Date: <p class="pl-5">{{feedback.datecreated}}</p>
+                </span>
+
+            </div>
+            {%else%}
+            <div class="col-md-6">
+                <h3>You have no feedback yet</h3>
+            </div>
+            {%endif%}
+        </div>
+
+    </div>
+    {% endblock %}
+</div>
